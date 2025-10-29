@@ -3,6 +3,8 @@ import UIKit
 final class MovieQuizViewController: UIViewController {
     
     // MARK: - @IBOutlet
+    @IBOutlet weak var noButton: UIButton!
+    @IBOutlet weak var yesButton: UIButton!
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
@@ -68,7 +70,17 @@ final class MovieQuizViewController: UIViewController {
     private func removeBorder() {
         imageView.layer.borderWidth = 0
     }
-   
+    
+    private func disableAnswerButtons() {
+        noButton.isEnabled = false
+        yesButton.isEnabled = false
+    }
+    
+    private func enableAnswerButtons() {
+        noButton.isEnabled = true
+        yesButton.isEnabled = true
+    }
+    
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let quizStepViewModel = QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
@@ -93,8 +105,6 @@ final class MovieQuizViewController: UIViewController {
         }
     }
     
-   
-    
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questions.count - 1 {
             let text = "Ваш результат: \(correctAnswers)/10"
@@ -104,12 +114,14 @@ final class MovieQuizViewController: UIViewController {
                 buttonText: "Сыграть ещё раз")
             show(quiz: viewModel)
         } else {
+            
             currentQuestionIndex += 1
             let nextQuestion = questions[currentQuestionIndex]
             let viewModel = convert(model: nextQuestion)
             removeBorder()
             show(quiz: viewModel)
         }
+        enableAnswerButtons()
     }
     
     private func show(quiz result: QuizResultsViewModel) {
@@ -132,11 +144,13 @@ final class MovieQuizViewController: UIViewController {
     
     // MARK: - @IBAction
     @IBAction private func noButtonClicked(_ sender: UIButton) {
+        disableAnswerButtons()
         let currentQuestion = questions[currentQuestionIndex]
         showAnswerResult(isCorrect: !currentQuestion.correctAnswer)
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        disableAnswerButtons()
         let currentQuestion = questions[currentQuestionIndex]
         showAnswerResult(isCorrect: currentQuestion.correctAnswer)
     }
