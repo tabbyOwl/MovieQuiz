@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F5168672EB4DC7D00C281F3 /* QuestionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5168662EB4DC7900C281F3 /* QuestionFactory.swift */; };
 		3FB18E1B2EAB446B00CB06C2 /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FB18E1A2EAB446B00CB06C2 /* YS Display-Medium.ttf */; };
 		3FB18E1C2EAB446B00CB06C2 /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FB18E192EAB446B00CB06C2 /* YS Display-Bold.ttf */; };
+		3FCF15A82EB5C60B003BF5D1 /* QuizQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5168682EB4DD6900C281F3 /* QuizQuestion.swift */; };
+		3FCF15A92EB5C610003BF5D1 /* QuizStepViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F51686A2EB4DD7F00C281F3 /* QuizStepViewModel.swift */; };
+		3FCF15AA2EB5C615003BF5D1 /* QuizResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F51686B2EB4DD9300C281F3 /* QuizResultsViewModel.swift */; };
 		AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB12831907B00B3E448 /* AppDelegate.swift */; };
 		AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */; };
 		AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */; };
@@ -20,6 +24,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3F5168662EB4DC7900C281F3 /* QuestionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactory.swift; sourceTree = "<group>"; };
+		3F5168682EB4DD6900C281F3 /* QuizQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizQuestion.swift; sourceTree = "<group>"; };
+		3F51686A2EB4DD7F00C281F3 /* QuizStepViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizStepViewModel.swift; sourceTree = "<group>"; };
+		3F51686B2EB4DD9300C281F3 /* QuizResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResultsViewModel.swift; sourceTree = "<group>"; };
 		3FB18E192EAB446B00CB06C2 /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Bold.ttf"; sourceTree = "<group>"; };
 		3FB18E1A2EAB446B00CB06C2 /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Medium.ttf"; sourceTree = "<group>"; };
 		AD1ABAAE2831907B00B3E448 /* MovieQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +73,9 @@
 		611342392B701CF6003FC2A4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3F51686B2EB4DD9300C281F3 /* QuizResultsViewModel.swift */,
+				3F51686A2EB4DD7F00C281F3 /* QuizStepViewModel.swift */,
+				3F5168682EB4DD6900C281F3 /* QuizQuestion.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -72,6 +83,7 @@
 		6113423A2B701CF8003FC2A4 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3F5168662EB4DC7900C281F3 /* QuestionFactory.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -211,8 +223,12 @@
 			files = (
 				AD7AFA552836189F00399704 /* Array+Extensions.swift in Sources */,
 				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
+				3FCF15A82EB5C60B003BF5D1 /* QuizQuestion.swift in Sources */,
+				3FCF15A92EB5C610003BF5D1 /* QuizStepViewModel.swift in Sources */,
 				AD77F5742857F8810062FB14 /* Date+Extensions.swift in Sources */,
 				AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */,
+				3F5168672EB4DC7D00C281F3 /* QuestionFactory.swift in Sources */,
+				3FCF15AA2EB5C615003BF5D1 /* QuizResultsViewModel.swift in Sources */,
 				AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
