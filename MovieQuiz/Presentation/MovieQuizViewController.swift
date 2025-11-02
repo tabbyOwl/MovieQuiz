@@ -32,7 +32,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let question = question else {
             return
         }
-
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -108,21 +107,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         enableAnswerButtons()
     }
     
+    private func restartGame() {
+        currentQuestionIndex = 0
+        correctAnswers = 0
+        removeBorder()
+        questionFactory?.requestNextQuestion()
+    }
+    
     private func showAlert(quiz result: QuizResultsViewModel) {
-        let alert = UIAlertController(
-            title: result.title,
-            message: result.text,
-            preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.currentQuestionIndex = 0
-            self.correctAnswers = 0
-            removeBorder()
-            questionFactory?.requestNextQuestion()
+        let alertModel = AlertModel(title: result.title, message: result.text, buttonText: result.buttonText) { [weak self] in
+            self?.restartGame()
         }
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
+        let alertPresenter = AlertPresenter()
+        alertPresenter.show(viewController: self, model: alertModel)
     }
     
     // MARK: - @IBAction
