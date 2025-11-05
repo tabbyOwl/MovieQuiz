@@ -42,7 +42,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Private methods
     private func setupImageView() {
         imageView.layer.masksToBounds = true
-        imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = 20
     }
     
