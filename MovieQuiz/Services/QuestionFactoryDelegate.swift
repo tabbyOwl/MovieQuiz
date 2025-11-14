@@ -1,0 +1,10 @@
+//
+//  QuestionFactoryDelegate.swift
+//  MovieQuiz
+//
+//  Created by Svetlana on 2025/11/2.
+//
+
+protocol QuestionFactoryDelegate: AnyObject {
+    func didReceiveNextQuestion(question: QuizQuestion?)
+}
