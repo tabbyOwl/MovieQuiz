@@ -4,7 +4,6 @@
 //
 //  Created by Svetlana on 2025/11/3.
 //
-
 import Foundation
 
 struct GameResult {
