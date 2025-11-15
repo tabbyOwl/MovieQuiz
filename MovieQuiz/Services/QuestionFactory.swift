@@ -11,12 +11,12 @@ final class QuestionFactory: QuestionFactoryProtocol {
     private var movies: [MostPopularMovie] = []
     private weak var delegate: QuestionFactoryDelegate?
     private let moviesLoader: MoviesLoadingProtocol
-
+    
     init(moviesLoader: MoviesLoadingProtocol, delegate: QuestionFactoryDelegate?) {
-          self.moviesLoader = moviesLoader
-          self.delegate = delegate
-      }
-  
+        self.moviesLoader = moviesLoader
+        self.delegate = delegate
+    }
+    
     func loadData() {
         moviesLoader.loadMovies { [weak self] result in
             DispatchQueue.main.async {
@@ -33,33 +33,33 @@ final class QuestionFactory: QuestionFactoryProtocol {
     }
     
     func requestNextQuestion() {
-            DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            let index = (0..<self.movies.count).randomElement() ?? 0
+            
+            guard let movie = self.movies[safe: index] else { return }
+            
+            var imageData = Data()
+            
+            do {
+                imageData = try Data(contentsOf: movie.resizedImageURL)
+            } catch {
+                print("Failed to load image")
+            }
+            let randomRating = Int.random(in: 7...9)
+            let rating = Float(movie.rating) ?? 0
+            
+            let text = "Рейтинг этого фильма больше чем \(randomRating)?"
+            let correctAnswer = rating > Float(randomRating)
+            
+            let question = QuizQuestion(image: imageData,
+                                        text: text,
+                                        correctAnswer: correctAnswer)
+            
+            DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                let index = (0..<self.movies.count).randomElement() ?? 0
-                
-                guard let movie = self.movies[safe: index] else { return }
-                
-                var imageData = Data()
-               
-               do {
-                    imageData = try Data(contentsOf: movie.resizedImageURL)
-                } catch {
-                    print("Failed to load image")
-                }
-                
-                let rating = Float(movie.rating) ?? 0
-                
-                let text = "Рейтинг этого фильма больше чем 7?"
-                let correctAnswer = rating > 7
-                
-                let question = QuizQuestion(image: imageData,
-                                             text: text,
-                                             correctAnswer: correctAnswer)
-                
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.didReceiveNextQuestion(question: question)
-                }
+                self.delegate?.didReceiveNextQuestion(question: question)
             }
         }
+    }
 }

@@ -1,7 +1,7 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
- 
+    
     // MARK: - @IBOutlet
     @IBOutlet weak var noButton: UIButton!
     @IBOutlet weak var yesButton: UIButton!
@@ -23,10 +23,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageView()
-        
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         statisticService = StatisticService()
-        
         setLoadingIndicator(visible: true)
         self.questionFactory?.loadData()
     }
@@ -157,6 +155,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let alertModel = AlertModel(title: "Что-то пошло не так(",
                                     message: message,
                                     buttonText: "Попробовать еще раз") { [weak self] in
+            self?.setLoadingIndicator(visible: true)
             self?.questionFactory?.loadData()
         }
         alertPresenter.show(viewController: self, model: alertModel)
