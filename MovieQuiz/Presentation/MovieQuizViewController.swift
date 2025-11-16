@@ -23,9 +23,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImageView()
+        activityIndicator.hidesWhenStopped = true
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         statisticService = StatisticService()
-        setLoadingIndicator(visible: true)
+        activityIndicator.startAnimating()
         self.questionFactory?.loadData()
     }
     
@@ -35,13 +36,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
+            self.activityIndicator.stopAnimating()
             self.show(quiz: viewModel)
         }
     }
     
+    func didFailToLoadImage(with error: Error) {
+        activityIndicator.stopAnimating()
+        showImageLoadError(message: error.localizedDescription)
+    }
+    
     func didLoadDataFromServer() {
-        setLoadingIndicator(visible: false)
+        activityIndicator.stopAnimating()
         questionFactory?.requestNextQuestion()
     }
     
@@ -96,25 +103,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
         updateBorder(isCorrect: isCorrect)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.showNextQuestionOrResults()
-        }
-    }
-    
-    private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questionsAmount - 1 {
-            guard let statisticService = statisticService else { return }
-            statisticService.store(correct: correctAnswers, total: questionsAmount)
-            let text = makeResultsText(statisticService: statisticService)
-            let viewModel = QuizResultsViewModel(
-                title: "Этот раунд окончен!",
-                text: text,
-                buttonText: "Сыграть ещё раз")
-            showAlert(quiz: viewModel)
-        } else {
-            removeBorder()
-            currentQuestionIndex += 1
-            questionFactory?.requestNextQuestion()
         }
     }
     
@@ -133,16 +123,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         return text
     }
     
-    private func showAlert(quiz result: QuizResultsViewModel) {
-        let alertModel = AlertModel(title: result.title,
-                                    message: result.text,
-                                    buttonText: result.buttonText) { [weak self] in
-            guard let self = self else { return }
-            self.restartGame()
-        }
-        alertPresenter.show(viewController: self, model: alertModel)
-    }
-    
     private func restartGame() {
         currentQuestionIndex = 0
         correctAnswers = 0
@@ -150,25 +130,55 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.requestNextQuestion()
     }
     
+    private func showNextQuestionOrResults() {
+        if currentQuestionIndex == questionsAmount - 1 {
+            guard let statisticService = statisticService else { return }
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
+            let text = makeResultsText(statisticService: statisticService)
+            let viewModel = QuizResultsViewModel(
+                title: "Этот раунд окончен!",
+                text: text,
+                buttonText: "Сыграть ещё раз")
+            showAlert(quiz: viewModel)
+        } else {
+            removeBorder()
+            currentQuestionIndex += 1
+            activityIndicator.startAnimating()
+            questionFactory?.requestNextQuestion()
+        }
+    }
+    
+    // MARK: - Alerts
+    private func showAlert(quiz result: QuizResultsViewModel) {
+        let alertModel = AlertModel(title: result.title,
+                                    message: result.text,
+                                    buttonText: result.buttonText) { [weak self] in
+            guard let self else { return }
+            self.restartGame()
+        }
+        alertPresenter.show(viewController: self, model: alertModel)
+    }
+  
     private func showNetworkError(message: String) {
-        setLoadingIndicator(visible: false)
+        activityIndicator.stopAnimating()
         let alertModel = AlertModel(title: "Что-то пошло не так(",
                                     message: message,
                                     buttonText: "Попробовать еще раз") { [weak self] in
-            self?.setLoadingIndicator(visible: true)
+            self?.activityIndicator.startAnimating()
             self?.questionFactory?.loadData()
         }
         alertPresenter.show(viewController: self, model: alertModel)
     }
     
-    private func setLoadingIndicator(visible: Bool) {
-        activityIndicator.isHidden = !visible
-        if visible {
-            self.activityIndicator.startAnimating()
-        } else {
-            self.activityIndicator.stopAnimating()
-            
+    private func showImageLoadError(message: String) {
+        let alertModel = AlertModel(title: "Ошибка",
+                                    message: message,
+                                    buttonText: "Повторить") { [weak self] in
+            guard let self else { return }
+            questionFactory?.requestNextQuestion()
         }
+        
+        alertPresenter.show(viewController: self, model: alertModel)
     }
     
     // MARK: - @IBAction
