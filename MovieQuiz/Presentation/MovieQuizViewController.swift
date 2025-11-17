@@ -95,6 +95,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.image = step.image
         textLabel.text = step.question
         enableAnswerButtons()
+        imageView.accessibilityIdentifier = "poster_\(step.questionNumber)"
     }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -152,7 +153,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showAlert(quiz result: QuizResultsViewModel) {
         let alertModel = AlertModel(title: result.title,
                                     message: result.text,
-                                    buttonText: result.buttonText) { [weak self] in
+                                    buttonText: result.buttonText,
+                                    accessabilityId: "Game result") { [weak self] in
             guard let self else { return }
             self.restartGame()
         }
@@ -163,7 +165,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         activityIndicator.stopAnimating()
         let alertModel = AlertModel(title: "Что-то пошло не так(",
                                     message: message,
-                                    buttonText: "Попробовать еще раз") { [weak self] in
+                                    buttonText: "Попробовать еще раз",
+                                    accessabilityId: "NetworkError") { [weak self] in
             self?.activityIndicator.startAnimating()
             self?.questionFactory?.loadData()
         }
@@ -173,7 +176,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showImageLoadError(message: String) {
         let alertModel = AlertModel(title: "Ошибка",
                                     message: message,
-                                    buttonText: "Повторить") { [weak self] in
+                                    buttonText: "Повторить",
+                                    accessabilityId: "ImageLoadError") { [weak self] in
             guard let self else { return }
             questionFactory?.requestNextQuestion()
         }
