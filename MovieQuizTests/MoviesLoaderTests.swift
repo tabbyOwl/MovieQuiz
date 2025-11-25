@@ -11,18 +11,14 @@ import XCTest
 class MoviesLoaderTests: XCTestCase {
     
     func testSuccessLoading() throws {
-        // Given
         let stubNetworkClient = StubNetworkClient(emulateError: false) // говорим, что не хотим эмулировать ошибку
         let loader = MoviesLoader(networkClient: stubNetworkClient)
         
-        // When
         let expectation = expectation(description: "Loading expectation")
         
         loader.loadMovies { result in
-            // Then
             switch result {
             case .success(let movies):
-                // давайте проверим, что пришло, например, два фильма — ведь в тестовых данных их всего два
                 XCTAssertEqual(movies.items.count, 2)
                 expectation.fulfill()
             case .failure(_):
@@ -34,15 +30,12 @@ class MoviesLoaderTests: XCTestCase {
     }
     
     func testFailureLoading() throws {
-        // Given
         let stubNetworkClient = StubNetworkClient(emulateError: true) // говорим, что хотим эмулировать ошибку
         let loader = MoviesLoader(networkClient: stubNetworkClient)
         
-        // When
         let expectation = expectation(description: "Loading expectation")
         
         loader.loadMovies { result in
-            // Then
             switch result {
             case .failure(let error):
                 XCTAssertNotNil(error)
@@ -51,28 +44,18 @@ class MoviesLoaderTests: XCTestCase {
                 XCTFail("Unexpected failure")
             }
         }
-        
         waitForExpectations(timeout: 1)
     }
 }
+
+struct StubNetworkClient: NetworkRoutingProtocol {
+    enum TestError: Error {
+        case test
+    }
     
-    struct StubNetworkClient: NetworkRoutingProtocol {
-        
-        enum TestError: Error { // тестовая ошибка
-            case test
-        }
-        
-        let emulateError: Bool // этот параметр нужен, чтобы заглушка эмулировала либо ошибку сети, либо успешный ответ
-        
-        func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
-            if emulateError {
-                handler(.failure(TestError.test))
-            } else {
-                handler(.success(expectedResponse))
-            }
-        }
-        
-        private var expectedResponse: Data {
+    let emulateError: Bool
+    
+    private var expectedResponse: Data {
         """
         {
            "errorMessage" : "",
@@ -104,5 +87,13 @@ class MoviesLoaderTests: XCTestCase {
             ]
           }
         """.data(using: .utf8) ?? Data()
+    }
+    
+    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
+        if emulateError {
+            handler(.failure(TestError.test))
+        } else {
+            handler(.success(expectedResponse))
         }
     }
+}
