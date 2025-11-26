@@ -8,33 +8,22 @@
 import XCTest
 @testable import MovieQuiz
 
-final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
-    func highlightImageBorder(isCorrect: Bool) {}
-    
-    func removeBorder() {}
-    
-    func showImageLoadError(message: String) {}
-    
-    func show(quiz step: QuizStepViewModel) {}
-    
-    func showAlert(quiz result: QuizResultsViewModel) {}
-    
-    func showLoadingIndicator() {}
-    
-    func hideLoadingIndicator() {}
-    
-    func showNetworkError(message: String) {}
-}
-
 final class MovieQuizPresenterTests: XCTestCase {
-    func testPresenterConvertModel() throws {
+    
+    func testPresenterConvertModel() {
+        // Given
         let viewControllerMock = MovieQuizViewControllerMock()
         let sut = MovieQuizPresenter(viewController: viewControllerMock)
+        let question = QuizQuestion(
+            image: Data(),
+            text: "Question Text",
+            correctAnswer: true
+        )
         
-        let emptyData = Data()
-        let question = QuizQuestion(image: emptyData, text: "Question Text", correctAnswer: true)
+        // When
         let viewModel = sut.convert(model: question)
         
+        // Then
         XCTAssertNotNil(viewModel.image)
         XCTAssertEqual(viewModel.question, "Question Text")
         XCTAssertEqual(viewModel.questionNumber, "1/10")

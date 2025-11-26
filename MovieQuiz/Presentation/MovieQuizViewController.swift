@@ -18,10 +18,8 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        presenter = MovieQuizPresenter(viewController: self)
-        setupImageView()
-        activityIndicator.hidesWhenStopped = true
-        showLoadingIndicator()
+        configureUI()
+        configurePresenter()
     }
     
     func highlightImageBorder(isCorrect: Bool) {
@@ -86,6 +84,19 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     // MARK: - Private methods
+    
+    // MARK: - Setup UI
+    private func configureUI() {
+        setupImageView()
+        activityIndicator.hidesWhenStopped = true
+        showLoadingIndicator()
+    }
+
+    // MARK: - Setup Presenter
+    private func configurePresenter() {
+        presenter = MovieQuizPresenter(viewController: self)
+    }
+    
     private func setupImageView() {
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
