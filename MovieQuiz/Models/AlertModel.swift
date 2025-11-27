@@ -9,6 +9,8 @@ struct AlertModel {
     let title: String
     let message: String
     let buttonText: String
+    let accessabilityId: String
     var completion: ( ) -> Void
     
 }
+
